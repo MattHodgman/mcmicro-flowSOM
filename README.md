@@ -3,7 +3,7 @@ An MCMICRO module for clustering cell types using the flowSOM algorithm.
 
 ## Example Usage
 ```
-docker run --rm -v "$PWD":/data myflow python3 /app/cluster.py -i /data/unmicst-2.csv -o /data/ -c
+docker run --rm -v "$PWD":/data labsyspharm/mc-flowsom:1.0.0 python3 /app/cluster.py -i /data/unmicst-2.csv -o /data/ -c
 ```
 
 ## Parameter Reference
@@ -23,5 +23,5 @@ optional arguments:
   -v, --verbose         Flag to print out progress of script
   -c, --method          Include a column with the method name in the output files.
   -n NUM_METACLUSTERS, --num-metaclusters NUM_METACLUSTERS
-                        number of clusters for meta-clustering.
+                        number of clusters for meta-clustering. Default is 25.
 ```
