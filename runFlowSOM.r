@@ -45,7 +45,7 @@ if (max > 1000) {
 fSOM <- FlowSOM(data, colsToUse=c(2:num_cols), nClus=as.integer(args[2]), compensate=FALSE, spillover=NULL)
 
 # get cluster assignments
-Cluster <- GetClusters(fSOM)
+Cluster <- GetMetaclusters(fSOM)
 
 # get raw input data and add clusters
 data_raw <- cbind(Cluster, exprs(data))
