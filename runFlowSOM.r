@@ -24,21 +24,19 @@ data <- read.FCS(args[1])
 # get the number of columns
 num_cols <- length(colnames(data))
 
-# check if log transformation is necessary
+# check if logicle transformation is necessary
 maxs <- vector() # initialize vec
 for(i in 2:num_cols) { # loop through column indices (excluding the first one which is cell ID)
     maxs <- append(maxs,max(exprs(data)[,i])) # add max of column to vec
 }
 max = max(maxs) # get the max of all the maxs
 
-# if the highest expression value is greater than 1000, log transform the data
+# if the highest expression value is greater than 1000, logicle transform the data
 if (max > 1000) {
-    # log transform the data
-    logTrans <- logTransform(transformationId="log10-transformation", logbase=10, r=1, d=1)
     cols <- colnames(data)
-    cols <- cols[cols != 'CellID'] # do not log transform cell IDs
-    trans <- transformList(cols, logTrans)
-    data <- transform(data, trans)
+    cols <- cols[cols != 'CellID'] # do not logicle transform cell IDs
+    logicleTrans <- estimateLogicle(data, cols) # automatically estimate the logicle transformation based on the data
+    data <- transform(data, logicleTrans) # apply logicle transformation
 }
 
 # run FlowSOM, cluster using all columns besides first (assuming it is the cell ID column)
