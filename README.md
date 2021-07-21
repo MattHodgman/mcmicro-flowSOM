@@ -3,7 +3,7 @@ An MCMICRO module for clustering cell types using the flowSOM algorithm.
 
 ## Example Usage
 ```
-docker run --rm -v "$PWD":/data labsyspharm/mc-flowsom:1.0.0 python3 /app/cluster.py -i /data/unmicst-2.csv -o /data/ -c
+docker run --rm -v "$PWD":/data labsyspharm/mc-flowsom:1.0.1 python3 /app/cluster.py -i /data/unmicst-exemplar-001.csv -o /data/ -c
 ```
 
 ## Parameter Reference
