@@ -5,6 +5,7 @@
 # 4. output directory
 # 5. output file name for cell/cluster assignment
 # 6. output file name for cluster mean feature values
+# 7. logicle transform flag
 
 # install packages
 if(!require('flowCore')) {install.packages('flowCore')}
@@ -24,19 +25,21 @@ data <- read.FCS(args[1])
 # get the number of columns
 num_cols <- length(colnames(data))
 
-# check if logicle transformation is necessary
-maxs <- vector() # initialize vec
-for(i in 2:num_cols) { # loop through column indices (excluding the first one which is cell ID)
-    maxs <- append(maxs,max(exprs(data)[,i])) # add max of column to vec
-}
-max = max(maxs) # get the max of all the maxs
+# check if logicle transformation is forced, omitted, or necessary
+if (args[7] == 'true' || args[7] == 'auto') {
+    maxs <- vector() # initialize vec
+    for(i in 2:num_cols) { # loop through column indices (excluding the first one which is cell ID)
+        maxs <- append(maxs,max(exprs(data)[,i])) # add max of column to vec
+    }
+    max = max(maxs) # get the max of all the maxs
 
-# if the highest expression value is greater than 1000, logicle transform the data
-if (max > 1000) {
-    cols <- colnames(data)
-    cols <- cols[cols != 'CellID'] # do not logicle transform cell IDs
-    logicleTrans <- estimateLogicle(data, cols) # automatically estimate the logicle transformation based on the data
-    data <- transform(data, logicleTrans) # apply logicle transformation
+    # if the highest expression value is greater than 1000, logicle transform the data, unless forced
+    if (args[7] == 'true' || max > 1000) {
+        cols <- colnames(data)
+        cols <- cols[cols != 'CellID'] # do not logicle transform cell IDs
+        logicleTrans <- estimateLogicle(data, cols) # automatically estimate the logicle transformation based on the data
+        data <- transform(data, logicleTrans) # apply logicle transformation
+    }
 }
 
 # run FlowSOM, cluster using all columns besides first (assuming it is the cell ID column)
