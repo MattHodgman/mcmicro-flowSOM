@@ -41,12 +41,18 @@ if (args[7] == 'true' || args[7] == 'auto') {
         data <- transform(data, logicleTrans) # apply logicle transformation
 
         # write that transformation occured to yaml file
-        cat('transform: true',file='config.yaml')
+        f <- file('config.yaml')
+        writeLines(c('---','transform: true'), f)
+        close(f)
     } else {
-        cat('transform: false',file='config.yaml')
+        f <- file('config.yaml')
+        writeLines(c('---','transform: false'), f)
+        close(f)
     }
 } else {
-    cat('transform: false',file='config.yaml')
+    f <- file('config.yaml')
+    writeLines(c('---','transform: false'), f)
+    close(f)
 }
 
 # run FlowSOM, cluster using all columns besides first (assuming it is the cell ID column)
