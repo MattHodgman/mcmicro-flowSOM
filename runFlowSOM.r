@@ -26,6 +26,8 @@ data <- read.FCS(args[1])
 num_cols <- length(colnames(data))
 
 # check if logicle transformation is forced, omitted, or necessary
+dir.create('qc')
+f <- file('qc/config.yml')
 if (args[7] == 'true' || args[7] == 'auto') {
     maxs <- vector() # initialize vec
     for(i in 2:num_cols) { # loop through column indices (excluding the first one which is cell ID)
@@ -41,19 +43,14 @@ if (args[7] == 'true' || args[7] == 'auto') {
         data <- transform(data, logicleTrans) # apply logicle transformation
 
         # write that transformation occured to yaml file
-        f <- file('config.yaml')
         writeLines(c('---','transform: true'), f)
-        close(f)
     } else {
-        f <- file('config.yaml')
         writeLines(c('---','transform: false'), f)
-        close(f)
     }
 } else {
-    f <- file('config.yaml')
     writeLines(c('---','transform: false'), f)
-    close(f)
 }
+close(f)
 
 # run FlowSOM, cluster using all columns besides first (assuming it is the cell ID column)
 fSOM <- FlowSOM(data, colsToUse=c(2:num_cols), nClus=as.integer(args[2]), compensate=FALSE, spillover=NULL)
