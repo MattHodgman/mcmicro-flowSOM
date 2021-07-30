@@ -39,7 +39,14 @@ if (args[7] == 'true' || args[7] == 'auto') {
         cols <- cols[cols != 'CellID'] # do not logicle transform cell IDs
         logicleTrans <- estimateLogicle(data, cols) # automatically estimate the logicle transformation based on the data
         data <- transform(data, logicleTrans) # apply logicle transformation
+
+        # write that transformation occured to yaml file
+        cat('transform: true',file='config.yaml')
+    } else {
+        cat('transform: false',file='config.yaml')
     }
+} else {
+    cat('transform: false',file='config.yaml')
 }
 
 # run FlowSOM, cluster using all columns besides first (assuming it is the cell ID column)
