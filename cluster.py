@@ -16,6 +16,7 @@ def parseArgs():
     parser.add_argument('-v', '--verbose', help='Flag to print out progress of script', action='store_true', required=False)
     parser.add_argument('-c', '--method', help='Include a column with the method name in the output files.', action='store_true', required=False)
     parser.add_argument('-n', '--num-metaclusters', help='number of clusters for meta-clustering. Default is 25.', type=int, required=False, default=25)
+    parser.add_argument('-y', '--config', help='A yaml config file that states whether the input data should be log/logicle transformed.', type=str, required=False)
     parser.add_argument('--force-transform', help='Logicle transform the input data. If omitted, and --no-transform is omitted, logicle transform is only performed if the max value in the input data is >1000.', action='store_true', required=False)
     parser.add_argument('--no-transform', help='Do not perform Logicle transformation on the input data. If omitted, and --force-transform is omitted, logicle transform is only performed if the max value in the input data is >1000.', action='store_true', required=False)
     args = parser.parse_args()
@@ -164,6 +165,21 @@ def runFlowSOM():
 
 
 '''
+Read config.yaml file contents.
+'''
+def readConfig(file):
+    f = open(file, 'r')
+    lines = f.readlines()
+
+    # find line with 'transform:' in it
+    for l in lines:
+        if 'transform:' in l.strip():
+            transform = l.split(':')[-1] # get last value after colon
+
+    return transform
+
+
+'''
 Main.
 '''
 if __name__ == '__main__':
@@ -182,7 +198,9 @@ if __name__ == '__main__':
         markers = get_markers(args.markers)
 
     # assess logicle transform parameter
-    if args.force_transform and not args.no_transform:
+    if args.config is not None:
+        transform = readConfig(args.config)
+    elif args.force_transform and not args.no_transform:
         transform = 'true'
     elif not args.force_transform and args.no_transform:
         transform = 'false'
