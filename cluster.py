@@ -198,12 +198,12 @@ if __name__ == '__main__':
         markers = get_markers(args.markers)
 
     # assess logicle transform parameter
-    if args.config is not None:
-        transform = readConfig(args.config)
-    elif args.force_transform and not args.no_transform:
+    if args.force_transform and not args.no_transform:
         transform = 'true'
     elif not args.force_transform and args.no_transform:
         transform = 'false'
+    elif args.config is not None:
+        transform = readConfig(args.config)
     else:
         transform = 'auto'
 
